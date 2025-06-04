@@ -1,0 +1,50 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    Ascii85 (2.0.1)
+    afm (0.2.2)
+    bigdecimal (3.2.1)
+    hashery (2.1.2)
+    iconv (1.1.0)
+    minitest (5.25.5)
+    pastel (0.8.0)
+      tty-color (~> 0.5)
+    pdf-reader (2.14.1)
+      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
+    pdftoimage (0.2.1)
+      iconv (~> 1.0)
+      shellwords (~> 0.2.2)
+    rtesseract (3.1.4)
+    ruby-rc4 (0.1.5)
+    shellwords (0.2.2)
+    ttfunk (1.8.0)
+      bigdecimal (~> 3.1)
+    tty-color (0.6.0)
+    tty-cursor (0.7.1)
+    tty-prompt (0.23.1)
+      pastel (~> 0.8)
+      tty-reader (~> 0.8)
+    tty-reader (0.9.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.2)
+    wisper (2.0.1)
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  minitest
+  pdf-reader
+  pdftoimage
+  rtesseract
+  tty-prompt
+
+BUNDLED WITH
+   2.6.2
