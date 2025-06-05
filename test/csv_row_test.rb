@@ -1,7 +1,7 @@
 require "minitest/autorun"
 require "csv_row"
 
-class TestCSVRow < Minitest::Test
+class CSVRowTest < Minitest::Test
 
   def setup
     # input

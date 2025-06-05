@@ -30,13 +30,12 @@ rows = CSV.read('./in/MASTERCARD.csv')[1..-1].map do |row|
 end
 
 Pathname.glob("./in/*.pdf").each_with_index do |pdf_file_path, i|
-  pdf_file = PdfFile.new(pdf_file_path)  
+  pdf_file = PdfFile.new(pdf_file_path)
   
-  pid = Process.spawn("mupdf #{pdf_file_path.to_s.shellescape}")   
+  pid = Process.spawn(pdf_file.command_to_open_pdf_using("mupdf")) # mupdf is what i prefer to view pdfs
 
     rows.each do |row|
-      next if row.does_row_have_filename? 
-      # if the csv_row already has a filename listed - we can skip it. It's already mapped.
+      next if row.does_row_have_filename? # if the csv_row already has a filename listed - we can skip it. It's already been mapped.
 
       if File.exist?(pdf_file_path)
         if pdf_file.matches?(row)          
@@ -46,7 +45,7 @@ Pathname.glob("./in/*.pdf").each_with_index do |pdf_file_path, i|
 
             row.add_filename_to_row # add to row
 
-            FileUtils.mv(pdf_file_path, "./out/pdfs/#{row.to_filename}#{File.extname(pdf_file_path) }")
+            FileUtils.mv(pdf_file_path, pdf_file.output_path(row))
             break
           end          
         end
