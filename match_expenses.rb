@@ -25,7 +25,11 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load rub
 # (3) in the csv file - we add another column showing the newly renamed file.
 
 
+ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU"]
+
 rows = CSV.read('./in/MASTERCARD.csv')[1..-1].map do |row|
+  next if ignore_transactions.any?{ |description| description == row[2].upcase }
+
   CsvRow.new(date_string: row[0], price_string: row[1], description: row[2], filename: row[3])
 end
 
