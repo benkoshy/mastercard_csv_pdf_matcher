@@ -91,7 +91,7 @@ class PdfFile
   end
 
   def command_to_open_pdf_using(program)
-    "#{program} #{pdf_file_path.to_s.shellescape}"
+    "#{program} #{@file_path.to_s.shellescape}"
   end
 
   private
