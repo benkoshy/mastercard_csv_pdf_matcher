@@ -25,11 +25,9 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load rub
 # (3) in the csv file - we add another column showing the newly renamed file.
 
 
-ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU"]
+
 
 rows = CSV.read('./in/MASTERCARD.csv')[1..-1].map do |row|
-  next if ignore_transactions.any?{ |description| description == row[2].upcase }
-
   CsvRow.new(date_string: row[0], price_string: row[1], description: row[2], filename: row[3])
 end
 
@@ -39,7 +37,7 @@ Pathname.glob("./in/*.pdf").each_with_index do |pdf_file_path, i|
   pid = Process.spawn(pdf_file.command_to_open_pdf_using("mupdf")) # mupdf is what i prefer to view pdfs
 
     rows.each do |row|
-      next if row.does_row_have_filename? # if the csv_row already has a filename listed - we can skip it. It's already been mapped.
+      next if row.does_row_have_filename? || row.ignorable? # if the csv_row already has a filename listed - we can skip it. It's already been mapped.
 
       if File.exist?(pdf_file_path)
         if pdf_file.matches?(row)          

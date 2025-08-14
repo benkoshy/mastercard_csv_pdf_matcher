@@ -34,4 +34,10 @@ class CsvRow
 	def to_filename
 		return "#{@date.strftime("%Y-%m-%d")} - #{@price} - #{@description[0..100]}"
 	end
+
+	def ignorable?
+		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE"]
+
+		ignore_transactions.any?{ |description| description == @description.upcase }
+	end
 end
