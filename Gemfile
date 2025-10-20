@@ -5,8 +5,15 @@ gem 'rtesseract'
 
 gem "pdftoimage"
 
-gem "minitest"
-
 gem "tty-prompt"
 
 gem "pdf-reader"
+
+gem "rake"
+
+
+group :test do
+	gem "minitest"
+    gem 'minitest-reporters'
+    gem 'debug'
+end

@@ -5,6 +5,13 @@ require "date"
 require 'csv'
 
 require "tty-prompt"
+require "debug"
+
+## Todos
+# First match with dollar numbers. This is the most efficient
+# Then match with words that are not numbers.
+# Then if you want go through a full text search (non-image)
+# Then finally a full image search.
 
 
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load ruby files
@@ -25,40 +32,12 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load rub
 # (3) in the csv file - we add another column showing the newly renamed file.
 
 
+### Somtimes we might have a CSV entry like this:
+# 24/07/2025	15.93	PAYPAL *KAVALRYPTEL 31254310 SGP ## SGP MERCHANT
+## so we might want to match a pdf named "Kavalry"
+## meaning that the word must be contained anywhere in the text.
 
 
-rows = CSV.read('./in/MASTERCARD.csv')[1..-1].map do |row|
-  CsvRow.new(date_string: row[0], price_string: row[1], description: row[2], filename: row[3])
-end
 
-Pathname.glob("./in/*.pdf").each_with_index do |pdf_file_path, i|
-  pdf_file = PdfFile.new(pdf_file_path)
-  
-  pid = Process.spawn(pdf_file.command_to_open_pdf_using("mupdf")) # mupdf is what i prefer to view pdfs
-
-    rows.each do |row|
-      next if row.does_row_have_filename? || row.ignorable? # if the csv_row already has a filename listed - we can skip it. It's already been mapped.
-
-      if File.exist?(pdf_file_path)
-        if pdf_file.matches?(row)          
-
-          if TTY::Prompt.new.yes?("\n\n\n\n Does #{row.to_filename} match with the pdf #{pdf_file_path}?")
-          	Process.kill("KILL", pid)            
-
-            row.add_filename_to_row # add to row
-
-            FileUtils.mv(pdf_file_path, pdf_file.output_path(row))
-            break
-          end          
-        end
-      end
-    end      
-  Process.kill("KILL", pid)
-  Process.waitpid(pid)
-end
-
-puts "Saving the csv file now....."
-
-CSV.open("./in/MASTERCARD.csv", "w") do |f|  
-  rows.each{|row| f << row.new_csv_row}
-end
+matcher = Matcher.new
+matcher.choose_matching_style

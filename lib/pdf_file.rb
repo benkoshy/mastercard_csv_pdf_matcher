@@ -5,12 +5,19 @@ require 'pdf-reader'
 
 class PdfFile
 
+  PDF_INPUT_DIRECTORY_GLOB = "./in/*.pdf"  
+  PDF_OUTPUT_DIRECTORY_NAME = "out"
+
+  attr_reader :file_path
+
   def initialize(file_path)
     @file_path = file_path
   end
 
   def matches?(csv_row)
-    return true if matches_with_heading?(csv_row.description) # this is good for items e.g. usa items with costs notwed in the description column of the csv row
+    ## refactor this
+    # return true if csv_row.match_pdf_name?(pdf_name)
+    # return true if matches_with_heading?(csv_row.description) # this is good for items e.g. usa items with costs notwed in the description column of the csv row
 
     return true if matches_with_text?(csv_row.price)
 
@@ -63,7 +70,7 @@ class PdfFile
 
     PDFToImage.open(@file_path) do |page|
       pdf_file_name = File.basename(@file_path, File.extname(@file_path))
-      image_path = "#{output_directory_name}/#{pdf_file_name}-#{page.page}.jpg"
+      image_path = "#{PDF_OUTPUT_DIRECTORY_NAME}/#{pdf_file_name}-#{page.page}.jpg"
       page.save(image_path)
       @image_paths << image_path
     end
@@ -76,30 +83,30 @@ class PdfFile
     return @image_paths, @image_texts
   end
 
-  ## For debugging:
-  #  def print_text
-  #    puts @image_texts
-  #  end
-  #
-  #
-  #  def rename_pdf(csv_row)
-  #    puts "renaming to: #{output_directory_name}/#{csv_row.file_name}"
-  #  end
 
   def output_path(row)
-    "./#{output_directory_name}/pdfs/#{row.to_filename}#{File.extname(@file_path) }"
+    "./#{PDF_OUTPUT_DIRECTORY_NAME}/pdfs/#{row.to_filename}#{File.extname(@file_path) }"
   end
 
   def command_to_open_pdf_using(program)
     "#{program} #{@file_path.to_s.shellescape}"
   end
 
-  private
 
-  def output_directory_name
-    "out"
+  def pdf_name
+    File.basename(@file_path, ".*")
   end
 
+  def exists?
+    File.exist?(@file_path)
+  end
 
+  def move_to_output_directory(row)
+    FileUtils.mv(@file_path, output_path(row))
+  end
+
+  def self.get_input_pdfs
+    Pathname.glob(PDF_INPUT_DIRECTORY_GLOB).map{|pdf_file_path| PdfFile.new(pdf_file_path) }
+  end  
 
 end
