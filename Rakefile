@@ -1,17 +1,10 @@
-require "minitest/test_task"
 
-Minitest::TestTask.create # named test, sensible defaults
 
-# or more explicitly:
+# frozen_string_literal: true
 
-Minitest::TestTask.create(:test) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.warning = false
-  t.test_globs = ["test/**/*_test.rb"]
-end
+Rake.add_rakelib 'tasks'
 
-task :default => :test
+task default: %i[test]
 
 
 desc 'set up folder structure'

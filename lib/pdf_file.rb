@@ -14,32 +14,33 @@ class PdfFile
     @file_path = file_path
   end
 
-  def matches?(csv_row)
-    ## refactor this
-    # return true if csv_row.match_pdf_name?(pdf_name)
-    # return true if matches_with_heading?(csv_row.description) # this is good for items e.g. usa items with costs notwed in the description column of the csv row
+  def set_full_text
+    @full_text = get_full_text if full_text_is_blank?        
 
-    return true if matches_with_text?(csv_row.price)
-
-    return matches_with_images?(csv_row)
-  end
-
-  def matches_with_heading?(description)
-    @full_text = get_full_text if (@full_text.nil? || @full_text.empty? )
-
-    captures = description.scan(/[0-9]*\.[0-9]{2}/)
-
-    return false if captures.empty?
-
-    captures.each do |dollar_number|
-      return true if @full_text.match?(/(\$#{dollar_number})|(#{dollar_number})/)
+    if @full_text.empty?
+      @image_paths, @image_texts = set_up_image_variables if (@image_paths.nil? || @image_texts.nil?)
+      @full_text << @image_texts.join("\n")
     end
+
+    @full_text
   end
 
-  def matches_with_text?(price)
-    @full_text = get_full_text if (@full_text.nil? || @full_text.empty? )
+  def matches?(csv_row)
+    @full_text = set_full_text if full_text_is_blank?
 
-    return @full_text.match?(/(\$#{price})|(#{price})/)
+    @full_text.match?(/(\$#{csv_row.price})|(#{csv_row.price})/)    
+  end
+  
+  def matches_with_text?(price)
+    @full_text = get_full_text if full_text_is_blank?    
+
+    @full_text.match?(/(\$#{price})|(#{price})/)
+  end
+
+  def display
+    @full_text = set_full_text if full_text_is_blank?   
+
+    @full_text     
   end
 
   def get_full_text
@@ -51,7 +52,7 @@ class PdfFile
       full_text << page.text
     end
 
-    return full_text.strip
+    full_text
   end
 
   def matches_with_images?(price)
@@ -86,11 +87,7 @@ class PdfFile
 
   def output_path(row)
     "./#{PDF_OUTPUT_DIRECTORY_NAME}/pdfs/#{row.to_filename}#{File.extname(@file_path) }"
-  end
-
-  def command_to_open_pdf_using(program)
-    "#{program} #{@file_path.to_s.shellescape}"
-  end
+  end  
 
 
   def pdf_name
@@ -108,5 +105,11 @@ class PdfFile
   def self.get_input_pdfs
     Pathname.glob(PDF_INPUT_DIRECTORY_GLOB).map{|pdf_file_path| PdfFile.new(pdf_file_path) }
   end  
+
+  private
+
+  def full_text_is_blank?
+    (@full_text.nil? || @full_text.empty? )
+  end
 
 end

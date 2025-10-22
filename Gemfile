@@ -7,6 +7,8 @@ gem "pdftoimage"
 
 gem "tty-prompt"
 
+gem 'tty-pager'
+
 gem "pdf-reader"
 
 gem "rake"

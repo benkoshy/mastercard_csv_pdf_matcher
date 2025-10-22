@@ -7,11 +7,7 @@ require 'csv'
 require "tty-prompt"
 require "debug"
 
-## Todos
-# First match with dollar numbers. This is the most efficient
-# Then match with words that are not numbers.
-# Then if you want go through a full text search (non-image)
-# Then finally a full image search.
+require 'tty-pager'
 
 
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load ruby files
@@ -37,7 +33,5 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load rub
 ## so we might want to match a pdf named "Kavalry"
 ## meaning that the word must be contained anywhere in the text.
 
-
-
 matcher = Matcher.new
-matcher.choose_matching_style
+matcher.save?

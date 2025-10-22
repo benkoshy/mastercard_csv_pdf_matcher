@@ -56,7 +56,7 @@ class CsvRow
 	end
 
 	def match_pdf_name?(pdf_name)
-		# test all the words too
+		# test all the words too		
 		return true if does_price_match?(pdf_name)
 
 		return true if description_matches?(pdf_name)
@@ -64,16 +64,14 @@ class CsvRow
 
 	def does_price_match?(pdf_name)
 		pdf_name_without_date = pdf_name.gsub(/\d{2,4}-\d{1,2}-\d{1,2}/, '')
-		pdf_name_without_date.include?("%.2f" % absolute_price_in_decimal(@price)) 		
+		pdf_name_without_date.include?("%.2f" % absolute_price_in_decimal(@price)) || pdf_name_without_date.include?(absolute_price_in_decimal(@price).to_i.to_s)
 	end
 
 	private
 
 	def absolute_price_in_decimal(price_string)
 		BigDecimal(price_string.strip).abs
-	end
-
-	
+	end	
 
 	def description_matches?(pdf_name)
 		description_words = @description.split(" ")

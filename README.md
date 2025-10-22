@@ -38,7 +38,19 @@ We also have bunch of pdfs in a folder attached (the 'in' folder) our job is to 
 1. Get a CSV file - download this feed from your bank.
 2. Place your pdf receipts in your `in` folder.
 3. The code will move everything to the `out` folder.
-4. I'm using `mupdf` because it is light weight. You may choose to use your own reader. Open up the `match_expenses.rb` file and change the line where it opens up a pdf reader - to use the reader of your choice.
+
+
+This renames pdfs according to entries contained in a CSV file.
+
+There are three modes of search.
+
+1. The first searches file names of the pdf file with on purely price. i.e. we get the price entry of the csv row, and match it with a price in the pdf.
+2. the second seeks to match any word in the pdf file with a word in the csv description.
+3. This seeks to find the csv price within the contents of the pdf itself.
+
+When you are happy - save the file.
+
+### Installation
 
 `bundle install`
 
@@ -47,4 +59,13 @@ We also have bunch of pdfs in a folder attached (the 'in' folder) our job is to 
 `ruby match_expenses.rb` to run the code.
 
 And then either say `yes / y` or `no /n`.
+
+
+### To-do
+
+* Add tests.
+* Set-up tests in terms of particular rake tasks.
+* Package this gem into a command line utility.
+
+
 
