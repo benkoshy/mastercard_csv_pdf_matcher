@@ -34,4 +34,5 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load rub
 ## meaning that the word must be contained anywhere in the text.
 
 matcher = Matcher.new
+matcher.check_for_matches
 matcher.save?

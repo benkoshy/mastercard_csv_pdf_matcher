@@ -33,7 +33,7 @@ class CsvRow
 	end	
 
 	def to_filename
-		return "#{@date.strftime("%Y-%m-%d")} - #{@price} - #{@description[0..100]}"
+		"#{@date.strftime("%Y-%m-%d")} - #{@price} - #{@description[0..100]}"
 	end
 
 	def to_s
@@ -64,7 +64,7 @@ class CsvRow
 
 	def does_price_match?(pdf_name)
 		pdf_name_without_date = pdf_name.gsub(/\d{2,4}-\d{1,2}-\d{1,2}/, '')
-		pdf_name_without_date.include?("%.2f" % absolute_price_in_decimal(@price)) || pdf_name_without_date.include?(absolute_price_in_decimal(@price).to_i.to_s)
+		pdf_name_without_date.include?("%.2f" % absolute_price_in_decimal(@price)) 
 	end
 
 	private
