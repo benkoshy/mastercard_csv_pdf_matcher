@@ -33,6 +33,11 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file } # load rub
 ## so we might want to match a pdf named "Kavalry"
 ## meaning that the word must be contained anywhere in the text.
 
+
+cleaner = RowCleaner.new
+cleaner.clean_prices
+cleaner.save
+
 matcher = Matcher.new
 matcher.check_for_matches
 matcher.save?

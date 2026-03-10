@@ -10,7 +10,7 @@ class CsvRow
 		@date_string = date_string
 		@date = DateTime.parse(date_string.gsub(/\s+/, " ").strip)
 		@description = description.gsub(/\s+/, " ").strip
-		@price = "%.2f" % absolute_price_in_decimal(price_string)		
+		@price = "%.2f" % absolute_price_in_decimal(_clean_price(price_string))		
 		@filename = filename
 	end
 
@@ -50,9 +50,14 @@ class CsvRow
 	end
 
 	def ignorable?
-		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE"]
+		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE", "Google YouTubePremium Barangaroo AUS"]
 
 		ignore_transactions.any?{ |description| description == @description.upcase }
+	end
+
+	def record_na
+		puts "Recording NA on: #{self}"
+		@filename = "NA"
 	end
 
 	def match_pdf_name?(pdf_name)
@@ -67,7 +72,15 @@ class CsvRow
 		pdf_name_without_date.include?("%.2f" % absolute_price_in_decimal(@price)) 
 	end
 
+	def clean_price
+		@price = _clean_price(@price)
+	end
+
 	private
+
+	def _clean_price(price_string)
+		price_string.gsub(/[^0-9.-]/, "")
+	end
 
 	def absolute_price_in_decimal(price_string)
 		BigDecimal(price_string.strip).abs
