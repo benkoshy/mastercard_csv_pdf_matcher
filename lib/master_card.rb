@@ -11,7 +11,10 @@ class MasterCard
 	end
 
 	def save(rows)
-		CSV.open(MASTERCARD_CSV_FILE_PATH, 'w') do |f|
+		CSV.open(MASTERCARD_CSV_FILE_PATH, 'w',
+			 :write_headers=> true,
+    		 :headers => ["DATE","AMNT","DESCRIPTION"]
+    ) do |f|
 	      rows.each { |row| f << row.new_csv_row }
 	    end
 	end
