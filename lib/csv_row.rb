@@ -8,7 +8,7 @@ class CsvRow
 	
 	def initialize(date_string:, description:, price_string: , filename: )
 		@date_string = date_string
-		@date = DateTime.parse(date_string.gsub(/\s+/, " ").strip)
+		@date = DateTime.strptime(date_string.gsub(/\s+/, "").strip, "%d/%m/%y")
 		@description = description.gsub(/\s+/, " ").strip
 		@price = "%.2f" % absolute_price_in_decimal(_clean_price(price_string))		
 		@filename = filename
