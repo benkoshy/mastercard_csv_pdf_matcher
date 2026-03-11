@@ -8,7 +8,7 @@ class RowCleaner
 
   def clean_prices
   	puts "cleaning all rows from negative prices and dollar signs"
-    @rows.map{|r| r.clean_price }
+    @rows = @rows.each{|r| r.clean_price }
   end
 
   def save
