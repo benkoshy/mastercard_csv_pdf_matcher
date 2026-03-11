@@ -29,11 +29,16 @@ class CSVRowTest < Minitest::Test
   def test_csv_row_price_matches_pdf_filename_1
     @row = CsvRow.new(date_string: '29/07/2025', price_string: '202', description: 'REMITLY* B72C7 Sydney',
                       filename: '')
-    assert @row.match_pdf_name?('20250726 REMITLY 202')
+    refute @row.match_pdf_name?('20250726 REMITLY 202') # we need decimal places
   end
 
   def test_csv_row_price_matches_pdf_filename_2
     @row = CsvRow.new(date_string: '29/07/2025', price_string: '202', description: 'REMITLY* B72C7 Sydney', filename: '')
-    assert @row.match_pdf_name?('20250729 202 REMITLY')
+    assert @row.match_pdf_name?('20250729 202.00 REMITLY')
+  end
+
+  def test_match_3
+    @row = CsvRow.new(date_string: '03/03/26', price_string: '16.98', description: 'AMAZON AU MARKETPLACE SYDNEY', filename: '')    
+    assert @row.does_price_match?("16.98 - Tek1 Pty Ltd Mail - Ordered_ .pdf") 
   end
 end

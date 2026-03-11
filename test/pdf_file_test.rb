@@ -15,4 +15,6 @@ class TestPdfFileTest < Minitest::Test
     assert_equal @pdf_file.output_path(@row), "./out/pdfs/#{@row.to_filename}#{File.extname(@pdf_file_path) }"
   end
 
+  
+
 end
