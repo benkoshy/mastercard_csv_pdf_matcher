@@ -10,7 +10,7 @@ class CsvRow
 		@date_string = date_string
 		@date = DateTime.strptime(date_string.gsub(/\s+/, "").strip, "%d/%m/%y")
 		@description = description.gsub(/\s+/, " ").strip
-		@price = "%.2f" % absolute_price_in_decimal(_clean_price(price_string))		
+		@price = "%.2f" % absolute_price_in_decimal(clean_price_string(price_string))		
 		@filename = filename
 	end
 
@@ -73,12 +73,12 @@ class CsvRow
 	end
 
 	def clean_price
-		@price = _clean_price(@price)
+		@price = "%.2f" % absolute_price_in_decimal(clean_price_string(@price)) # repeat what is in initializer
 	end
 
 	private
 
-	def _clean_price(price_string)
+	def clean_price_string(price_string)
 		price_string.gsub(/[^0-9.-]/, "")
 	end
 
