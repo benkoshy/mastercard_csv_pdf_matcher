@@ -12,7 +12,7 @@ class Matcher
       catch :break do
         @rows.each do |row|
           next if row.does_row_have_filename?          
-          row.record_na and next if row.ignorable?           
+          (row.record_na and next) if row.ignorable?           
 
           next unless pdf_file.exists? && programmatic_match?(row, pdf_file)
 
