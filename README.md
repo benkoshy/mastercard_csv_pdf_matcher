@@ -60,6 +60,9 @@ When you are happy - save the file.
 
 And then either say `yes / y` or `no /n`.
 
+### Run Tests
+
+`bundle exec rake test`
 
 ### To-do
 
