@@ -9,7 +9,7 @@ class CSVRowTest < Minitest::Test
   end
 
   def test_file_output_name
-    assert_equal '2025-05-07 - 155.39 - HEROKU* APR-102668913 SAN FRANCISCCA ##0525 100.01 US DOLLAR', @row.to_filename
+    assert_equal "2020-05-07 - 155.39 - HEROKU* APR-102668913 SAN FRANCISCCA ##0525 100.01 US DOLLAR", @row.to_filename
   end
 
   def test_csv_row_dollar_matches_pdf_filename
