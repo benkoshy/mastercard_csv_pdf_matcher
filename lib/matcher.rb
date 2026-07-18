@@ -3,10 +3,11 @@ class Matcher
     @master_card = MasterCard.new
     @rows = @master_card.get_rows
     @match_mode = setup_match_mode
+    @pdfs = PdfFile.get_input_pdfs
   end
 
   def check_for_matches
-    PdfFile.get_input_pdfs.each do |pdf_file|
+    @pdfs.each do |pdf_file|
       puts "reviwing pdf: #{pdf_file.pdf_name} - #{pdf_file.file_path}"
 
       catch :break do
@@ -19,7 +20,7 @@ class Matcher
           case ask_if_matches(row, pdf_file)
           when :yes
             row.add_filename_to_row # add to row
-            pdf_file.move_to_output_directory(row)
+            pdf_file.mark_as_move_to_output_director(row)
             throw :break
           when :no
           when :skip_pdf

@@ -98,8 +98,14 @@ class PdfFile
     File.exist?(@file_path)
   end
 
-  def move_to_output_directory(row)
-    FileUtils.mv(@file_path, output_path(row))
+  def move_to_output_directory()
+    if !@new_output_path.nil?
+      FileUtils.mv(@file_path, @new_output_path)    
+    end
+  end
+
+  def mark_as_move_to_output_director(row)
+    @new_output_path = output_path(row)
   end
 
   def self.get_input_pdfs
