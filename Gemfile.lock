@@ -2,57 +2,64 @@ GEM
   remote: https://rubygems.org/
   specs:
     Ascii85 (2.0.1)
-    afm (0.2.2)
-    ansi (1.5.0)
-    bigdecimal (3.2.1)
+    afm (1.0.0)
+    ansi (1.6.0)
+    bigdecimal (3.3.1)
     builder (3.3.0)
-    date (3.4.1)
-    debug (1.11.0)
+    debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    erb (5.1.1)
+    drb (2.2.3)
+    erb (6.0.5)
     hashery (2.1.2)
-    iconv (1.1.0)
-    io-console (0.8.1)
-    irb (1.15.2)
+    io-console (0.8.2)
+    irb (1.18.0)
       pp (>= 0.6.0)
+      prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    minitest (5.25.5)
-    minitest-reporters (1.7.1)
+    logger (1.7.0)
+    mini_magick (5.3.2)
+      logger
+    minitest (6.0.6)
+      drb (~> 2.0)
+      prism (~> 1.5)
+    minitest-reporters (1.8.0)
       ansi
       builder
-      minitest (>= 5.0)
+      minitest (>= 5.0, < 7)
       ruby-progressbar
     pastel (0.8.0)
       tty-color (~> 0.5)
-    pdf-reader (2.14.1)
+    pdf-reader (2.15.1)
       Ascii85 (>= 1.0, < 3.0, != 2.0.0)
-      afm (~> 0.2.1)
+      afm (>= 0.2.1, < 2)
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
-    pdftoimage (0.2.1)
-      iconv (~> 1.0)
+    pdftoimage (0.3.2)
+      mini_magick (>= 4.0, < 6)
       shellwords (~> 0.2.2)
-    pp (0.6.3)
+    pp (0.6.4)
       prettyprint
     prettyprint (0.2.0)
-    psych (5.2.6)
-      date
-      stringio
-    rake (13.3.0)
-    rdoc (6.15.0)
-      erb
-      psych (>= 4.0.0)
+    prism (1.9.0)
+    rake (13.4.2)
+    rbs (4.0.3)
+      logger
+      prism (>= 1.6.0)
       tsort
-    reline (0.6.2)
+    rdoc (8.0.0)
+      erb
+      prism (>= 1.6.0)
+      rbs (>= 4.0.0)
+      tsort
+    reline (0.6.3)
       io-console (~> 0.5)
     rtesseract (3.1.4)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
     shellwords (0.2.2)
-    stringio (3.1.7)
     strings (0.2.1)
       strings-ansi (~> 0.2)
       unicode-display_width (>= 1.5, < 3.0)
@@ -94,4 +101,4 @@ DEPENDENCIES
   tty-prompt
 
 BUNDLED WITH
-   2.6.2
+   2.5.11
