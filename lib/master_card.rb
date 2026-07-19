@@ -2,21 +2,23 @@
 
 class MasterCard
 
-	MASTERCARD_CSV_FILE_PATH = "./in/MASTERCARD.csv"
-	
-	def get_rows
-		return CSV.read(MASTERCARD_CSV_FILE_PATH)[1..-1].map do |row|
-  			CsvRow.new(date_string: row[0], price_string: row[1], description: row[2], filename: row[3])
-		end
-	end
+  MASTERCARD_CSV_FILE_PATH = "./in/MASTERCARD.csv"
 
-	def save(rows)
-		CSV.open(MASTERCARD_CSV_FILE_PATH, 'w',
-			 :write_headers=> true,
-    		 :headers => ["DATE","AMNT","DESCRIPTION"]
+  def get_rows
+    return CSV.read(MASTERCARD_CSV_FILE_PATH)[1..-1].map do |row|
+      CsvRow.new(date_string: row[0], price_string: row[1], description: row[2], filename: row[3])
+    end
+  end
+
+  def save(rows)
+
+    CSV.open(MASTERCARD_CSV_FILE_PATH, 'w',
+             :write_headers=> true,
+             :headers => ["DATE","AMNT","DESCRIPTION"]
     ) do |f|
-	      rows.each { |row| f << row.new_csv_row }
-	    end
-	end
+
+      rows.sort{|a,b| a.date <=> b.date}.reverse.each{ |row| f << row.new_csv_row }
+    end
+  end
 
 end

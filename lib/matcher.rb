@@ -1,38 +1,50 @@
 class Matcher
+
   def initialize
     @master_card = MasterCard.new
     @rows = @master_card.get_rows
     @match_mode = setup_match_mode
     @pdfs = PdfFile.get_input_pdfs
+    @solutions = Solutions.new
   end
 
   def check_for_matches
-    @pdfs.each do |pdf_file|
-      puts "reviwing pdf: #{pdf_file.pdf_name} - #{pdf_file.file_path}"
 
-      catch :break do
-        @rows.each do |row|
-          next if row.does_row_have_filename?          
-          (row.record_na and next) if row.ignorable?           
+    catch :restart do
+      @pdfs.each do |pdf_file|
+        puts "reviwing pdf: #{pdf_file.pdf_name} - #{pdf_file.file_path}"
 
-          next unless pdf_file.exists? && programmatic_match?(row, pdf_file)
+        catch :break do
+          @rows.each do |row|
+            next if row.does_row_have_filename?
+            (row.record_na and next) if row.ignorable?
 
-          case ask_if_matches(row, pdf_file)
-          when :yes
-            row.add_filename_to_row # add to row
-            pdf_file.mark_as_move_to_output_director(row)
-            throw :break
-          when :no
-          when :skip_pdf
-            throw :break
-          when :skip_row
-            row.add_skip_to_row
-          when :display
-            display_pdf(pdf_file)         
-            display_row(row) # so we remember what we're matching!?   
-            redo
-          when :quit
-            exit
+            next unless pdf_file.exists? && programmatic_match?(row, pdf_file)
+
+            case ask_if_matches(row, pdf_file)
+            when :yes
+              row.add_filename_to_row # add to row
+              pdf_file.mark_as_move_to_output_directory(row)
+              @solutions.add(row, pdf_file)
+              throw :break
+            when :no
+            when :skip_pdf
+              throw :break
+            when :skip_row
+              row.add_skip_to_row
+            when :display
+              display_pdf(pdf_file)
+              display_row(row) # so we remember what we're matching!?
+              redo
+            when :restart
+              # pop solution
+              # row should be marked clean
+              # pdf should not have an output path
+              @solutions.pop
+              throw :restart
+            when :quit
+              exit
+            end
           end
         end
       end
@@ -48,6 +60,8 @@ class Matcher
     puts 'Saving the csv file now.....'
 
     @master_card.save(@rows)
+
+    @pdfs.each { |pdf| pdf.move_to_output_directory  } # copy pdfs
   end
 
   private
@@ -60,17 +74,17 @@ class Matcher
     TTY::Pager.new.page(row.to_s)
   end
 
-    def setup_match_mode
+  def setup_match_mode
     question = 'How do you want to match?'
 
     choices =
-      [
-        { key: 'p', name: 'on price? - match pdf_file_name on the price in a csv row entry', value: :price },
-        { key: 'h', name: 'on file_name? - match pdf file name with everything in the csv_row and not just price.',
-          value: :heading },
-        { key: 'c', name: "on content? - match the csv row price with what's inside the pdf", value: :content },
-        { key: 'q', name: 'quit ', value: :quit }
-      ]
+    [
+      { key: 'p', name: 'on price? - match pdf_file_name on the price in a csv row entry', value: :price },
+      { key: 'h', name: 'on file_name? - match pdf file name with everything in the csv_row and not just price.',
+        value: :heading },
+      { key: 'c', name: "on content? - match the csv row price with what's inside the pdf", value: :content },
+      { key: 'q', name: 'quit ', value: :quit }
+    ]
 
     response = TTY::Prompt.new.select(question, choices)
 
@@ -84,7 +98,7 @@ class Matcher
     case @match_mode
     when :price
       row.does_price_match?(pdf_file.pdf_name)
-    when :heading      
+    when :heading
       row.match_pdf_name?(pdf_file.pdf_name) ## match the whole row including the words
     when :content
       pdf_file.matches?(row)
@@ -100,6 +114,7 @@ class Matcher
       { key: 's', name: 'skip_pdf ', value: :skip_pdf },
       { key: 'r', name: 'skip_row ', value: :skip_row },
       { key: 'd', name: 'display ', value: :display },
+      { key: 'e', name: 'restart ', value: :restart },
       { key: 'q', name: 'quit ', value: :quit }
     ]
 

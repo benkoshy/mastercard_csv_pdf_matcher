@@ -3,7 +3,7 @@ require 'date'
 
 class CsvRow
 
-	attr_reader :price, :description, :price_in_decimals
+	attr_reader :price, :description, :price_in_decimals, :date
 
 	
 	def initialize(date_string:, description:, price_string: , filename: )
@@ -32,6 +32,10 @@ class CsvRow
 		@filename = "skip"
 	end	
 
+	def clear_filename
+		@filename = ""
+	end
+
 	def to_filename
 		"#{@date.strftime("%Y-%m-%d")} - #{@price} - #{@description[0..100]}"
 	end
@@ -50,7 +54,7 @@ class CsvRow
 	end
 
 	def ignorable?
-		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE", "Google YouTubePremium Barangaroo AUS"]
+		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE", "The Trustee for Jet Cl Oakleigh AUS"]
 
 		ignore_transactions.any?{ |description| description == @description.upcase }
 	end
