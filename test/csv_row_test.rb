@@ -47,9 +47,9 @@ class CSVRowTest < Minitest::Test
     assert @row.does_price_match?("16.98 - Tek1 Pty Ltd Mail - Ordered_ .pdf") 
   end
 
-  def test_match_4
+  def test_to_filename
     @row = CsvRow.new(date_string: '03/03/26', price_string: '16.98', description: 'AMAZON AU MARKETPLACE SYDNEY', filename: '')    
-    assert_equal @row.new_csv_row[0], '03/03/26'
+    assert_equal @row.to_filename, '2026-03-03 - 16.98 - AMAZON AU MARKETPLACE SYDNEY'
   end
 
 end
