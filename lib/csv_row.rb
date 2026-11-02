@@ -54,7 +54,7 @@ class CsvRow
 	end
 
 	def ignorable?
-		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE", "The Trustee for Jet Cl Oakleigh AUS"]
+		ignore_transactions = ["INTNL TRANSACTION FEE", "MONTHLY FEE", "PAYMENT RECEIVED, THANK YOU", "CBA OTHER CASH ADV FEE", "The Trustee for Jet CI Oakleigh AUS"]
 
 		ignore_transactions.any?{ |description| description == @description.upcase }
 	end
