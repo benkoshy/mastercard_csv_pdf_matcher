@@ -20,6 +20,13 @@ class CSVRowTest < Minitest::Test
     assert @row.match_pdf_name?('2025-08-07 - 155 100.01 USD - heroku')
   end
 
+  def test_csv_does_price_match_without_decimals
+    row = CsvRow.new(date_string: '07/05/2025', price_string: '-155.00',
+                      description: 'HEROKU* APR-102668913 SAN FRANCISCCA ##0525 100.01 US DOLLAR', filename: '')
+
+    assert row.does_price_match?('2025-08-07 - 155 100.01 USD - heroku')
+  end
+
   def test_csv_row_general_name_matches_pdf_filename
     @row = CsvRow.new(date_string: '07/05/2025', price_string: '-155.39', description: 'IINET LTD N SYDNEY',
                       filename: '')
@@ -29,7 +36,7 @@ class CSVRowTest < Minitest::Test
   def test_csv_row_price_matches_pdf_filename_1
     @row = CsvRow.new(date_string: '29/07/2025', price_string: '202', description: 'REMITLY* B72C7 Sydney',
                       filename: '')
-    refute @row.match_pdf_name?('20250726 REMITLY 202') # we need decimal places
+    assert @row.match_pdf_name?('20250726 REMITLY 202') # we don't need decimal places
   end
 
   def test_csv_row_price_matches_pdf_filename_2
